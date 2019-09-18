@@ -1,3 +1,9 @@
+[TOC]
+
+
+
+
+
 # 链表和数组
 
 1.https://leetcode.com/problems/reverse-linked-list/ 
@@ -10,7 +16,7 @@
 
 [Leetcode :141.环形链表 (Easy)](https://leetcode-cn.com/problems/linked-list-cycle/)
 
-解题思路：
+#### 解题思路：
 
 **快慢指针，如果有环，必然相遇**
 
@@ -291,10 +297,11 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 # 堆栈
 
 1.https://leetcode.com/problems/implement-queue-using-stacks/solution/  
+
 2.https://leetcode.com/problems/implement-stack-using-queues/description/
 3.https://leetcode.com/problems/valid-parentheses/description/
 
-#### [leetcode 20. 有效的括号.easy](https://leetcode-cn.com/problems/valid-parentheses/)
+### [leetcode 20. 有效的括号.easy](https://leetcode-cn.com/problems/valid-parentheses/)
 
 ~~~HTML
 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
@@ -401,7 +408,7 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 
 ![1557232304809](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1557232304809.png)
 
-#### [leetcode 232. 用栈实现队列.easy](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+### [leetcode 232. 用栈实现队列.easy](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
 ~~~HTML
 使用栈实现队列的下列操作：
@@ -483,5 +490,1944 @@ class MyQueue {
 
 }
 
+~~~
+
+
+
+### [LeetCode 225. 用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+
+~~~Html
+使用队列实现栈的下列操作：
+
+push(x) -- 元素 x 入栈
+pop() -- 移除栈顶元素
+top() -- 获取栈顶元素
+empty() -- 返回栈是否为空
+注意:
+
+你只能使用队列的基本操作-- 也就是 push to back, peek/pop from front, size, 和 is empty 这些操作是合法的。
+你所使用的语言也许不支持队列。 你可以使用 list 或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。
+你可以假设所有操作都是有效的（例如, 对一个空的栈不会调用 pop 或者 top 操作）。
+~~~
+
+
+
+解题思路：
+
+栈：**先进先出**
+
+在push的时候将其进行翻转。
+
+使用一个临时变量，来进行翻转。
+
+1）在push的时候，将queue里面的数据全部poll到tempQueue 里面。
+
+2）然后将temp里面的数据push到queue里面
+
+3）再将temp里面的全部数据poll到queue里面，即**翻转**。
+
+~~~Java
+class MyStack {
+
+    private Queue<Integer> queue;
+
+    /** Initialize your data structure here. */
+    public MyStack() {
+        queue = new LinkedList<>();
+
+    }
+    /**
+     * 在添加数据的时候进行翻转
+     */
+    /** Push element x onto stack. */
+    public void push(int x) {
+        Queue<Integer> temp = new LinkedList<>();
+        //如果队列中不为空
+        while (!queue.isEmpty()){
+            //将队列中所有的数据转移到临时队列中temp
+            temp.add(queue.poll());
+        }
+        //将新加入的添加到队列中
+        queue.add(x);
+        //将temp中的翻转到queue中
+        while (!temp.isEmpty()){
+            queue.add(temp.poll());
+        }
+    }
+
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        return queue.poll();
+    }
+
+    /** Get the top element. */
+    public int top() {
+        return queue.peek();
+    }
+
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return  queue.isEmpty();
+    }
+}
+~~~
+
+# 优先队列
+
+1.https://leetcode.com/problems/kth-largest-element-in-astream/discuss/149050/Java-Priority-Queue 
+
+2.https://leetcode.com/problems/sliding-window-maximum/
+
+
+
+正常入，按优先等级出
+
+实现机制：
+
+1)堆（Heap）（最大堆、最小堆、斐波那契堆...）
+
+![1557497670354](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1557497670354.png)
+
+2）二叉搜索树
+
+
+
+## [LeetCode 703. 数据流中的第K大元素 easy](https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/)
+
+~~~HTML
+设计一个找到数据流中第K大元素的类（class）。注意是排序后的第K大元素，不是第K个不同的元素。
+
+你的 KthLargest 类需要一个同时接收整数 k 和整数数组nums 的构造器，它包含数据流中的初始元素。每次调用 KthLargest.add，返回当前数据流中第K大的元素。
+
+示例:
+
+int k = 3;
+int[] arr = [4,5,8,2];
+KthLargest kthLargest = new KthLargest(3, arr);
+kthLargest.add(3);   // returns 4
+kthLargest.add(5);   // returns 5
+kthLargest.add(10);  // returns 5
+kthLargest.add(9);   // returns 8
+kthLargest.add(4);   // returns 8
+说明: 
+你可以假设 nums 的长度≥ k-1 且k ≥ 1。
+~~~
+
+
+
+**解题思路：**
+
+**方法一、**
+
+保存前K个最大值。需要用到排序，快排的时间复杂度为**O(nlogn)**
+
+**方法二、**
+
+优先队列（PriorityQueue）
+
+PriorityQueue默认维护一个最小堆实现。
+
+​	1）添加数据的时候判断是否大于优先队列的队列头，大于则移出队列头，把新的数据添加进去。
+
+添加数据入优先队列中的时间复杂度一般为**logK**。
+
+~~~Java
+class KthLargest {
+    private int k;
+    private PriorityQueue<Integer> queue;
+
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        queue = new PriorityQueue<>(k);//指定创建一个大小为3的优先队列
+        //将数组中的数添加入queue中
+        for (int a : nums){
+            add(a);
+        }
+    }
+
+    public int add(int val) {
+        //如果优先队列中的个数小于k，说明需要往里面添加
+        if (queue.size() < k){
+
+            queue.offer(val);
+            //如果优先队列中的最小堆小于新添加的数，则将最小的数出优先队列
+        }else if (queue.peek() < val){
+            queue.poll();
+            queue.offer(val);//优先队列自动维护最小堆
+        }
+        return queue.peek();
+    }
+}
+
+~~~
+
+
+
+## [LeetCode 239.滑动窗口最大值  hard](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+~~~html
+给定一个数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+
+返回滑动窗口中的最大值。
+
+ 
+
+示例:
+
+输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+输出: [3,3,5,5,6,7] 
+解释: 
+
+  滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+ 
+
+提示：
+
+你可以假设 k 总是有效的，在输入数组不为空的情况下，1 ≤ k ≤ 输入数组的大小。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/sliding-window-maximum
+~~~
+
+**解题思路：**
+
+解法 一：
+
+```java
+/**
+ * 删除滑动窗口最左边的元素，加入滑动窗口的新元素
+ * 1,通过优先队列获得维持大顶堆，删除滑动窗口最左边的元素，加入滑动窗口的新元素
+ *2，让最大值位于大顶堆上面
+ * 
+ */
+```
+
+1）使用优先队列维护一个大顶堆，问题是如何保证下一次滑动之后的是最新的K个数字？
+
+​	(1) 在遍历过程中，i < k - 1,说明未达到K个数，不满足滑动窗口满了
+
+​	(2) 继续添加
+
+​	(3) 当刚好 i = k -1时，此时的queue的顶部就是当前滑动窗口的最大值，获取
+
+​	(4) 剩下的情况就已满，要加入，则先要移除，然后再获取peek（）
+
+~~~Java
+class Solution {
+ 
+    public int[] maxSlidingWindow(int[] nums, int k) {
+       if(nums==null || nums.length<0 || k<=0 || k==1)
+            return nums;
+ //		priorityQueue默认的是从最小值到最大值（小顶堆），通过改写其comparator,变成大顶堆
+        queue = new PriorityQueue<>(k, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        //当前可以获取的最大个数
+        int[] max = new int[nums.length - k  + 1];
+        
+        for (int i = 0; i < nums.length; i++){
+//          如果是第K个数之前和第K个数，就说明优先队列没有满，继续添加
+            if(i  <  k - 1){
+                queue.add(nums[i]);
+            }else if(i == k- 1){
+                queue.add(nums[i]);
+                max[0] = queue.peek();
+            }else {
+//              优先队列已满，删除滑动窗口最左边的数[i - k],添加新的数
+                queue.remove(nums[i - k]);
+                queue.add(nums[i]);
+                max[i - k + 1] = queue.peek();
+            }
+        }
+ 
+ 
+ 
+        return max;
+ 
+    }
+}
+
+————————————————
+版权声明：本文为CSDN博主「励志编程小能手」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_38765867/article/details/84197314
+~~~
+
+**解法二：**
+
+使用双端队列。java中的双端队列deque（支持在两端插入和移除元素）。deque是一个接口，实现它的类有ArrayDeque，LinkedBlockingDeque,LinkedList.
+
+我们用双向队列，在遇到新的数的时候，将**新的数**和双向队列的**末尾**进行比较，如果末尾的数比新数小，则把**末尾的数扔掉**，直到该队列的**末尾数比新数大或者队列为空的时候**才停止。这样，我们可以保证队列里的元素是**从头到尾的降序**。由于队列中只有窗口里的数，就是窗口里的第一大数，第二大数，第三数...。
+
+如何**保持队列**呢。每当滑动窗口的k已满，想要新进来一个数，就需要**把滑动窗口最左边的数移出队列**，**添加新的数**。
+
+我们在添加新的数的时候，就已经移出了一些数，这样队列头部的数不一定是窗口最左边的数。
+
+技巧：我们队列中**只存储那个数在原数组的下标**。这样可以判断该数是否为最滑动窗口的最左边的数。
+
+~~~Java
+   /**
+     * 使用双端队列
+     *1 保存下标
+     *2 双端队列已满，有新的数进来的时候，要移除滑动窗口最左边的数
+     *3 头部一直保持最大值（通过将要加入的新的值和队列尾部的最后一个值进行比较，如果最新的值比较大，则把旧数      *移除出队列，直到队列为空或者旧值比新值大。
+     */
+
+
+    public int[] maxSlidingWindow1(int[] nums, int k) {
+
+        if(nums==null || nums.length<0 || k<=0 || k==1)
+            return nums;
+
+        Deque<Integer> deque = new ArrayDeque<Integer>(k);
+        int[] max = new int[nums.length - k + 1];
+        for (int  i = 0; i < nums.length; i++){
+//          双端队列已满，有新的数进来的时候，要移除滑动窗口最左边的数
+            if(!deque.isEmpty() && deque.peekFirst() == i - k){
+                deque.removeFirst();
+
+            }
+//          头部一直保持最大值（通过将要加入的新的值和队列尾部的最后一个值进行比较，如果最新的值比较大，则把旧数移除出队列，直到队列为空或者旧值比新值大。
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]){
+                deque.removeLast();
+            }
+//          添加
+            deque.offerLast(i);
+
+//          判断当前滑动窗口中的最大值，获取最大值
+//          当 i 大于等于 k - 1时滑动窗口才满，才有最大值
+            if ( i >= k - 1){
+                max[i - k + 1] = nums[deque.peekFirst()];
+            }
+        }
+        return max;
+    }
+
+~~~
+
+![1567254062069](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1567254062069.png)
+
+## 二数之和
+
+解法一：
+
+暴力解决，时间复杂度是O(N的平方)
+
+~~~Java
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        if( nums.length == 0 )
+            return new int[0];
+        int[] result = new int[2];
+        for(int i = 0; i < nums.length; i++){
+            for(int j = i + 1; j < nums.length; j++){
+                if(nums[i] + nums[j] == target ){
+                    result[0] = i;
+                    result[1] = j;
+                    return result;
+                }
+
+            }
+        }
+        return new int[0];
+        
+    }
+}
+~~~
+
+
+
+
+
+# 二叉树
+
+## 验证二叉树搜索树
+
+
+
+解题思路
+
+~~~html
+递归解决，通过引入两个数判断最大值和最小值
+左子树只有最大值，右子树只有最小值
+
+~~~
+
+
+
+~~~java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        if(root == null){
+            return true;
+        }
+        return isValid(root, null, null);
+    }
+
+    public boolean isValid(TreeNode root, Integer min, Integer max) {
+        if(root == null ){
+            return true;
+        }
+        //判断右子树是否符合大于最小值，如果小于等于则返回false，对右子树来说，max一直为null
+        if(min != null && root.val <= min)
+            return false;
+        //判断左子树是否符合小于最大值，如果大于等于则返回false，对于左子树来说，min一直为null
+        if(max != null && root.val >= max){
+            return false;
+        }
+
+        return isValid(root.left, min, root.val) && isValid(root.right, root.val, max);
+
+    }
+}
+~~~
+
+## 236 二叉树的最近祖先
+
+
+
+题目
+
+```html
+ 给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+ * 
+ * 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x
+ * 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+ * 
+ * 例如，给定如下二叉树:  root = [3,5,1,6,2,0,8,null,null,7,4]
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 示例 1:
+ * 
+ * 输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+ * 输出: 3
+ * 解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+ * 
+ * 
+ * 示例 2:
+ * 
+ * 输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+ * 输出: 5
+ * 解释: 节点 5 和节点 4 的最近公共祖先是节点 5。因为根据定义最近公共祖先节点可以为节点本身。
+ * 
+ * 
+ * 
+ * 
+ * 说明:
+ * 
+ * 
+ * 所有节点的值都是唯一的。
+ * p、q 为不同节点且均存在于给定的二叉树中。
+ * 
+```
+
+
+
+解题思路
+
+思路1：path：找到最先相遇的公共节点，变成两个链表，但是没有父亲节点
+思路2：从root往下找，找到P，然后找到P，然后查询两个链表里面P、q 最后相遇的节点，即最近祖先时间复杂度O(N)
+**思路3：Recursion递归**
+如果是在根节点，那么立即返回根节点
+如果pq都在左子树，这样只需要寻找左子树，右子树返回的为null
+如果pq都在右子树，左子树返回的就是为null，这样只需要寻找右子树
+每个节点都要访问且访问一次
+	辅助函数 -findPOrQ（root， p， q）：找到P或q都返回
+		if（root == p Or root == q）
+			return root
+		递归
+		findPOrQ（root.left,p,q)
+		findPOrQ（root.right,p,q)
+
+
+
+~~~Java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        // 递归终止条件
+        // root为null或者找到p或q中的一个，返回root
+        if(root == null || root == p || root == q){
+            return root;
+        }
+
+        // 左子树递归
+        TreeNode left  = lowestCommonAncestor(root.left, p, q);
+
+        // 右子树递归
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if(left == null){
+            // 说明在左子树找不到p或者q，返回右子树
+            return right;
+        }
+        if(right == null){
+            // 说明在右子树找不到p或者q，返回左子树
+            return left;
+        }
+        //左右子树都能找到p或者q，则说明root才是他们的最近祖先节点
+        return root;
+    }
+}
+~~~
+
+
+
+## 265 搜索二叉树的最近祖先
+
+**题目**
+
+~~~html
+给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+ * 
+ * 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x
+ * 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+ * 
+ * 例如，给定如下二叉搜索树:  root = [6,2,8,0,4,7,9,null,null,3,5]
+ * 示例 1:
+ * 
+ * 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+ * 输出: 6 
+ * 解释: 节点 2 和节点 8 的最近公共祖先是 6。
+
+ * 示例 2:
+ * 
+ * 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+ * 输出: 2
+ * 解释: 节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
+ * 
+ * 
+ * 
+ * 说明:
+ * 
+ * 
+ * 所有节点的值都是唯一的。
+ * p、q 为不同节点且均存在于给定的二叉搜索树中。
+~~~
+
+
+
+**解题思路**
+
+​       分成三部分：
+
+​        左子树： root > q && root > p 说明他们的最近祖先在左子树这边
+
+​        右子树：root < q && root < p 说明他们的最近祖先在右子树这边
+
+​        **剩下的情况**
+
+​        root：如果不符合上面的条件，即 root == p 或者root == q亦或pq在左右子树两边说明当前节点就是最近公共祖先
+
+​     
+
+~~~Java
+
+//递归方式
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        /*
+        分成三部分：
+        左子树： root > q && root > p 说明他们的最近祖先在左子树这边
+        右子树：root < q && root < p 说明他们的最近祖先在右子树这边
+        剩下的情况
+        root：如果不符合上面的条件，即 root == p 或者root == q说明当前节点就是最近公共祖先
+        */
+
+        if(root.val > q.val && root.val > p.val){
+            return lowestCommonAncestor(root.left, p, q);
+        }
+        if(root.val < q.val && root.val < p.val){
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        return root;
+        
+    }
+}
+~~~
+
+~~~Java
+//非递归方式
+//易错点，if else要囊括全部的可能性
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        /*
+        分成三部分：
+        左子树： root > q && root > p 说明他们的最近祖先在左子树这边
+        右子树：root < q && root < p 说明他们的最近祖先在右子树这边
+        剩下的情况
+        root：如果不符合上面的条件，即 root == p 或者root == q亦或pq在左右子树两边说明当前节点就是最近公共祖先
+        */
+
+        while (root != null) {
+            //左子树： root > q && root > p 说明他们的最近祖先在左子树这边
+            if(root.val > q.val && root.val > p.val){
+                root = root.left;
+            }else if(root.val < q.val && root.val < p.val){
+                //右子树：root < q && root < p 说明他们的最近祖先在右子树这边
+                root = root.right;
+            }else{
+                //剩下的情况
+                //root：如果不符合上面的条件，即 root == p 或者root == q亦或pq在左右子树两边 , 说明当前节点就是最近公共祖先
+                return  root;
+            }
+        }
+        return null;
+    
+        
+    }
+}
+~~~
+
+# 递归模板
+
+~~~Java
+//level就是递归的层数，盗梦空间的梦境层数
+recursion(level, param1, param2,...){
+    //递归终止条件
+    if(level > MAX_LEVEL){
+        return
+    }
+    //递归之前的数据处理
+    process_data(level, data);
+    
+    //进入下一层梦境，参数变化
+    recusion(level + 1, p1...);
+    //收尾，翻转状态
+    reverse_state(level);
+}
+~~~
+
+# 分治 Divde & Conquer
+
+~~~Java
+divide_conquer(problem, param1, param2...){
+ //递归终止条件
+    if(problem == null){
+        return;
+    }
+ 
+    //数据的准备
+    data = prepare_data(problem);
+    subproblems = split_problem(problem, data);
+    
+    //分解子问题
+    subResult1= divide_conquer(subprblems[0], p1...);
+    subResult2= divide_conquer(subprblems[1], p1...);
+    subResult3= divide_conquer(subprblems[2], p1...);
+    ...
+    //对子结构合并
+    result = process_result(subResult1, subResult2,subResult3...)
+        
+    
+}
+~~~
+
+
+
+## 50 实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+
+题目
+
+~~~html
+实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+ * 
+ * 示例 1:
+ * 
+ * 输入: 2.00000, 10
+ * 输出: 1024.00000
+ * 
+ * 
+ * 示例 2:
+ * 
+ * 输入: 2.10000, 3
+ * 输出: 9.26100
+ * 
+ * 
+ * 示例 3:
+ * 
+ * 输入: 2.00000, -2
+ * 输出: 0.25000
+ * 解释: 2^-2 = 1/2^2 = 1/4 = 0.25
+ * 
+ * 说明:
+ * 
+ * 
+ * -100.0 < x < 100.0
+ * n 是 32 位有符号整数，其数值范围是 [−2^31, 2^31 − 1] 。
+~~~
+
+
+
+**解题思路**
+
+思路1：调用函数库O(1）
+
+思路2：暴力，for循环每一个O(N)
+
+**思路3：有多少个N，N的奇数或者偶数， N的减半次数O(logn)**
+
+![1568451476443](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568451476443.png)
+
+N的减半次数O(logn)
+
+解法一
+
+暴力解法
+
+~~~Java
+/**
+计算超时
+*/
+class Solution {
+    public double myPow(double x, int n) {
+        boolean flag = false;
+        // 如果n是负数 
+        if( n < 0){
+            n = Math.abs(n);
+            flag = true;
+        }
+
+        double result = 1.0;
+        for(int i = 0; i < n; i++){
+            result *= x;
+        }
+        if(flag){
+            result = 1.0 / result;
+        }
+
+        return result;
+    }
+}
+~~~
+
+
+
+解法二
+
+思路3：有多少个N，N的奇数或者偶数， N的减半次数O(logn)
+
+![1568451476443](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568451476443.png)
+
+N的减半次数O(logn)
+
+对N的次数每次减半，直到n=0，即递归
+
+~~~Java
+/**
+return 1 / myPow(x, Math.abs(n));
+会溢出
+因为int的最小值是2的-31次幂，int的最大值是2的-31次幂减1
+所以这里会有案例无法通过
+*/
+class Solution {
+    public double myPow(double x, int n) {
+        if(n == 0){
+            return 1.0;
+        }
+        if(n < 0){
+            return 1 / myPow(x, Math.abs(n));
+        }else{
+            // 解决n的奇数偶数
+            if( n % 2 != 0){
+                // 奇数
+                double r = myPow(x, (n-1) /2);
+                return r * r * x;
+            }else{
+                double r = myPow(x, n /2);
+                return r * r;
+            }
+        }
+
+    
+    }
+    
+}
+~~~
+
+~~~Java
+/**
+没有对n进行取整操作，不会有溢出
+而是改变了终止条件
+当n == 1时，说明是正整数，不需要1 /x
+当 n == -1时，说明是负整数，返回一个 1 / x
+*/
+
+class Solution {
+    public double myPow(double x, int n) {
+
+        if (n == 0) {
+            return (double) 1;
+        }
+        //使用 n等于1或者-1为终止条件
+        if (n == 1) {
+            return x;
+        } else if (n == -1) {
+            return 1 / x;
+        }
+        //为偶数时
+        if ((n % 2) == 0) {
+            double r = myPow(x, n / 2);
+            return r * r;
+        } else {
+            //为奇数时
+            double r = myPow(x, n / 2);
+            //因为为奇数时，还需要乘上一个本身，如果是负数时，需要将本身取反
+            if( n < 0){
+                x = 1 / x;
+            }
+            return r * r * x;
+        }
+    }
+    
+}
+~~~
+
+## 169 求众数
+
+**题目**
+
+~~~html
+给定一个大小为 n 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+
+你可以假设数组是非空的，并且给定的数组总是存在众数。
+
+示例 1:
+
+输入: [3,2,3]
+输出: 3
+示例 2:
+
+输入: [2,2,1,1,1,2,2]
+输出: 2
+~~~
+
+**解题思路**
+
+思路一：双重for循环，找寻其count的个数大于 n/2 的数， 时间复杂度O(N^2)
+
+思路二：使用map存储当前的数字，key存数字，map存个数，只用需要一次for循环，而map的操作是o（1),整体的时间复杂度为O(N)
+
+思路三：先排序，再找其中间值，即是众数 时间复杂度为O(nlogn）
+
+思路四：分治，通过分成两部分，然后寻找其中一部分的count最大值，如果左边的等于右边的说明是同一个数字，如果是左边的大，那就是左边的为众数，同理右边的也是
+
+ * 分治
+ * 一、递归终止条件，左右两边为同一个数
+ * 
+ * 二、数据准备：找寻中间值，从新赋予首尾值
+ * 
+ * 三、分解子问题（递归）
+ * 
+    *四、 对子结构合并
+ * 查询当前返回的左边的数是否等于右边，等于说明这就是众数
+ * 不等于，就遍历当前的首尾节点，找出谁的数多，多的就返回
+
+**解法一**
+
+~~~Java
+
+//思路一：双重for循环，找寻其count的个数大于 n/2 的数， 时间复杂度O(N^2)
+//超出时间限制
+//注意当数组为1时，应该直接返回当前数组的数
+class Solution {
+    public int majorityElement(int[] nums) {
+        if(nums.length == 0){
+            return -1;
+        }
+        if(nums.length == 1){
+            return nums[0];
+        }
+        for(int i = 0; i < nums.length - 1; i++){
+            int count = 1;
+            for(int j = i + 1; j < nums.length; j++){
+                
+                if(nums[i] == nums[j]){
+                    count++;
+                    if(count > nums.length / 2){
+                        return nums[i];
+                    }
+                }
+                
+            }
+        }
+        return -1;
+    }
+}
+~~~
+
+
+
+**解法二**
+
+思路二：使用map存储当前的数字，key存数字，map存个数，只用需要一次for循环，而map的操作是o（1),整体的时间复杂度为O(N)
+
+~~~Java
+/**
+ * Map中的<key,value>存当前数，当前出现的个数
+ * 存在于map中则替换加1
+ */
+class Solution {
+    public int majorityElement(int[] nums) {
+
+        if(nums.length == 0)
+            return -1;
+        //只有一个数的时候，直接返回
+        if(nums.length == 1){
+            return nums[0];
+        }
+        Map<Integer,Integer> map = new HashMap<>();
+       for(int i = 0; i < nums.length; i++){
+           if(map.containsKey(nums[i])){
+           
+                map.replace(nums[i], map.get(nums[i]) + 1);
+              
+                if(map.get(nums[i]) > nums.length / 2){
+                    return nums[i];
+                }
+
+           }else
+                map.put(nums[i], 1);
+
+           
+       }
+       return -1;
+    }
+}
+~~~
+
+**解法三**
+
+思路三：先排序，再找其中间值，即是众数 时间复杂度为O(nlogn）
+
+~~~Java
+/**
+ * 先排序，然后找大于 n/2的数
+ * 
+ */
+class Solution {
+    public int majorityElement(int[] nums) {
+
+        if(nums.length == 0)
+            return -1;
+        //只有一个数的时候，直接返回
+        if(nums.length == 1){
+            return nums[0];
+        }
+        Arrays.sort(nums);
+        
+       
+       return nums[nums.length / 2];
+    }
+}
+~~~
+
+
+
+**解法四**
+
+思路四：分治，通过分成两部分，然后寻找其中一部分的count最大值，如果左边的等于右边的说明是同一个数字，如果是左边的大，那就是左边的为众数，同理右边的也是
+
+ * 分治
+ * 一、递归终止条件，左右两边为同一个数
+ * 
+ * 二、数据准备：找寻中间值，从新赋予首尾值
+ * 
+ * 三、分解子问题（递归）
+ * 
+    *四、 对子结构合并
+ * 查询当前返回的左边的数是否等于右边，等于说明这就是众数
+ * 不等于，就遍历当前的首尾节点，找出谁的数多，多的就返回
+
+~~~Java
+/**
+ * 分治
+ * 一、递归终止条件，左右两边为同一个数
+ * 
+ * 二、数据准备：找寻中间值，从新赋予首尾值
+ * 
+ * 三、分解子问题（递归）
+ * 
+ *四、 对子结构合并
+ * 查询当前返回的左边的数是否等于右边，等于说明这就是众数
+ * 不等于，就遍历当前的首尾节点，找出谁的数多，多的就返回
+ * 
+ * 
+ */
+class Solution {
+    public int majorityElement(int[] nums) {
+        return divide_conquer(nums, 0, nums.length - 1);
+    }
+
+    public int divide_conquer(int[] nums, int begin, int end){
+        //终止条件,返回的是数值，不是下标
+        if(begin == end){
+            return nums[begin];
+        }
+
+        //数据准备
+        int mid = (begin + end) / 2;
+
+        //分解子问题
+        int left = divide_conquer(nums, begin, mid);
+        int right = divide_conquer(nums, mid + 1, end);
+
+        //对子结构合并
+        if(left == right){
+            //如果左右子问题的解相同，则返回
+            return left;
+        }else{
+            //不同，则遍历当前的数组长度，找寻左右问题的解谁更多
+
+            //左右两部分的众数不相同 则这两个数都有可能是这部分的众数
+            //那么遍历这个数组 看一下哪个数字的出现频率高
+            int countLeft = 0;
+            int countRight = 0;
+
+            //这里遍历需要包括end
+            for(int i = begin; i <= end; i++){
+
+                if(nums[i] == left){
+                    countLeft++;
+                }else if(nums[i] == right){
+                    countRight++;
+                }
+
+            }
+
+             //判断谁更多
+             if(countLeft > countRight){
+                return left;
+            }else{
+                return right;
+            }
+
+        }
+    }
+}
+~~~
+
+## 122 买卖股票最佳时机
+
+**题目**
+
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格
+
+ \* 设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+ \* 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+ \* 示例 1
+
+ \* 输入: [7,1,5,3,6,4]
+
+ \* 输出: 7
+
+ \* 解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
+
+ \* 随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+
+ \* 示例 2
+
+ \* 输入: [1,2,3,4,5]
+
+ \* 输出: 4
+
+ \* 解释: 在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4
+
+ \* 注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。
+
+ \* 因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。
+
+~~~Java
+class Solution {
+    /**
+     * 贪心解法
+     * 因为可以无限交易，所以只要发现明天的比今天的大，就可以抛出
+     * @param prices
+     * @return
+     */
+    public int maxProfit(int[] prices) {
+        int result = 0;
+        for(int i = 0; i < prices.length - 1; i++){
+            if(prices[i] < prices[ i+ 1]){
+                result += prices[i + 1] - prices[i];
+            }
+        }
+        return result;
+       
+        
+    }
+}
+~~~
+
+
+
+# BFS代码模板
+
+~~~Java
+BFS(graph, start, end){
+    Queue<> queue = new LinkedList<>();
+    queue.add([start]);
+    //盼重数组
+    visited.add(start);
+    while(queue.isEmpty()){
+        //取出头结点
+        node = queue.pop();
+        //添加标记
+        visited.add(node);
+        
+        process(node);
+        //判断是否被访问过
+        nodes = generate_related_nodes(node);
+        queue.add(nodes);
+    }
+}
+~~~
+
+# DFS代码模板
+
+~~~Java
+//递归写法
+visited = new HashSet<>();
+DFS(node, visited){
+    visited.add(node);
+    
+    //找寻node的子节点
+    for(next_node in node.children()){
+        //如果该子节点没有被访问，则DFS
+        if(next_node not in visitd)
+            DFS（next_noed, visited)
+    }
+}
+~~~
+
+~~~Java 
+/**
+非递归写法，手动维护一个stack栈
+*/
+DFS(Tree root){
+    if(root == null){
+        return;
+    }
+    visited = new HashSet<>();
+    stack.push(root);
+    while(stack.isEmpty){
+        node = stack.pop();
+        visited.add(node);
+        
+        process(node);
+        node = generate_related_nodes(node);
+        stack.push(nodes);
+    }
+    
+}
+
+~~~
+
+## 102 二叉树的层次遍历
+
+**题目**
+
+~~~HTML
+给定一个二叉树，返回其按层次遍历的节点值。 （即逐层地，从左到右访问所有节点）。
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+~~~
+
+
+
+**解题思路**
+
+**解法一：**使用BFS
+
+~~~Java
+ /**
+  * BFS
+  遍历每一层
+  要点：如何判断已经遍历完了这一层？
+  使用一个队列，每一层的大小通过上一层的遍历加入到队列中，然后循环队列中的剩下的数，就是当前层的数量
+  */
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        //判断是否符合二叉树
+        if(root == null){
+            return new ArrayList<>();
+        }
+
+        return BFS(root);
+        
+    }
+
+    //BFS
+    public List<List<Integer>> BFS(TreeNode root){
+        //定义结果集
+        List<List<Integer>> result = new ArrayList<>();
+
+        //定义队列
+        Queue<TreeNode> queue = new LinkedList<>();
+
+        // 头结点进队列
+        queue.add(root);
+
+        while(!queue.isEmpty()){
+            //获取当前层的节点数
+            int currentLevelSize = queue.size();
+           //当前层的list
+            List<Integer> currentList = new ArrayList<>();
+            //遍历当前层的个数，即队列中有多少个就是当前层的个数
+            for(int i = 0; i < currentLevelSize; i++){
+                 //头结点出队列
+                TreeNode currentNode = queue.poll();
+                //加入当前层的list
+                currentList.add(currentNode.val);
+			  //如果当前节点存在左子树，加入队列
+                if(currentNode.left != null){
+                    queue.add(currentNode.left);
+                }
+
+                //如果当前节点存在右子树，加入队列
+                if(currentNode.right != null){
+                    queue.add(currentNode.right);
+                }
+            }
+            
+            result.add(currentList);
+        }
+        return result;
+        
+
+    }
+}
+~~~
+
+**解法二：使用DFS**
+
+~~~Java
+/**
+ * 使用DFS
+ * 是先添加列，而不是行
+ * 例子：
+ * 第一次：
+ *  3
+ *  9
+ * 第二次：
+ *  3
+ *  9
+ *  15
+ * 要点：根据上面的做法，重点落在了如何判断当前的数是哪一层的数并添加
+ * 解决办法：添加一个level参数，level从0开始，如果result的size和level相等，说明需要新加一个子list。
+ * 例子：当root经入result中，他的大小为1，那么下一个level也为1，这样就需要添加一个新的list了
+ */
+class Solution {
+        public List<List<Integer>> levelOrder(TreeNode root) {
+            
+            if(root == null){
+                return new ArrayList<>();
+            }
+    
+            return DFS(root, 0, new ArrayList<>());
+            
+        }
+    
+        public List<List<Integer>> DFS(TreeNode root, int level, List<List<Integer>> result){
+           //终结条件
+           if(root == null){
+               return result;
+           }
+
+           List<Integer> list;
+           //判断level
+           //level与result的大小相等，则需要新增子list
+           if(level == result.size()){
+                list = new ArrayList<>();
+                list.add(root.val);
+                result.add(list);
+           }else{
+               //不相等，则需要从result中拿去数据，添加
+               
+               list = result.get(level);
+               list.add(root.val);
+
+               result.set(level, list);
+           }
+
+           DFS(root.left, level + 1, result);
+           DFS(root.right, level + 1, result);
+
+           return result;
+    
+        }
+}
+~~~
+
+## 104 二叉树的最大深度
+
+题目
+
+~~~HTML
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例：
+给定二叉树 [3,9,20,null,null,15,7]，
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+~~~
+
+使用递归
+
+**解法一：DFS**
+
+~~~Java 
+/**
+使用了DFS
+*/
+class Solution {
+    public int maxDepth(TreeNode root) {
+        return DFS(root, 0, 0);
+        
+    }
+    public int DFS(TreeNode root, int level, int max){
+        // end condition
+        if(root == null){
+            //如果当前层大于最大深度max，则将当前level赋给最大值
+            if(level > max) 
+                max = level;
+               return max;
+        }
+
+        int left = DFS(root.left, level + 1, max);
+        int right = DFS(root.right, level + 1, max);
+
+        //最大值要么在左子树这边，要么在右子树这边
+        return left > right ? left : right;
+    }
+}
+~~~
+
+DFS简单写法
+
+~~~Java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        //只要root等于null就返回0，否则就返回递归左子树和右子树的最大值  + 1
+        return root == null ? 0 :
+        1 + Math.max(maxDepth(root.left), maxDepth(root.right));       
+    }
+}
+~~~
+
+
+
+
+
+**解法二：使用BFS**
+
+~~~Java 
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        return BFS(root);
+        
+
+        
+    }
+
+    public int BFS(TreeNode root){
+        //定义队列
+        Queue<TreeNode> queue = new LinkedList<>();
+        //定义最大值
+        int max = 0;
+        //头结点入队列
+        queue.add(root);
+
+        //只要不为空就循环
+        while( !queue.isEmpty() ){
+            int currentLevelSize = queue.size();
+            //每一层的循环就  max +  1
+            max++;
+            
+            for(int i = 0; i < currentLevelSize; i++){
+                //在循环里面出队列，是要把当前层的数字全部出队列，这样下一层的个数就不会有影响了
+                TreeNode curentTreeNode = queue.poll();
+          
+                if(curentTreeNode.left != null){
+                    queue.add(curentTreeNode.left);
+                }
+                if(curentTreeNode.right != null){
+                    queue.add(curentTreeNode.right);
+                }
+            }
+        }
+        return max;
+
+    }
+   
+}
+~~~
+
+## 111 二叉树的最小深度
+
+题目
+
+~~~html
+给定一个二叉树，找出其最小深度。
+
+最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例:
+
+给定二叉树 [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最小深度  2.
+~~~
+
+
+
+解法一：DFS
+
+要点：特殊情况的处理
+
+**如果没有左子树，则只需要查询右子树**
+
+**如果没有右子树，则只需要查询左子树**
+
+~~~Java
+class Solution {
+    public int minDepth(TreeNode root) {
+        return DFS(root, 0, Integer.MAX_VALUE);
+        
+    }
+    public int DFS(TreeNode root, int level, int min){
+        // end condition
+        if(root == null){
+            //如果当前层小于min，则将当前level赋给最小值
+            if(level < min) 
+                min = level;
+               return min;
+        }
+
+        //特殊情况
+
+        //如果左子树为空，则在右子树中查找
+        if(root.left == null){
+            return DFS(root.right, level + 1, min);
+        }
+        //如果右子树为空，则在左子树中查找
+        if(root.right == null){
+            return DFS(root.left, level + 1, min);
+        }
+
+        //分治
+        int left = DFS(root.left, level + 1, min);
+        int right = DFS(root.right, level + 1, min);
+
+        //最小值要么在左边，要么在右边
+        return left < right ? left : right;
+    }
+}
+~~~
+
+~~~Java
+
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null)
+            return 0;
+        //特殊情况处理
+        //如果左子树为空，则在右子树中查找
+        if(root.left == null){
+            return  1 + minDepth(root.right);
+        }
+        //如果右子树为空，则在左子树中查找
+        if(root.right == null){
+            return 1 + minDepth(root.left);
+        }
+
+        //分治
+        int left = minDepth(root.left);
+        int right = minDepth(root.right);
+
+        return  1 + Math.min(left, right);
+
+        
+    }
+
+}
+~~~
+
+
+
+## 22 括号生成
+
+**题目**
+
+~~~html
+给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。
+
+例如，给出 n = 3，生成结果为：
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+~~~
+
+
+
+**解题思路**
+
+思路一：数学归纳法
+
+**思路二：Recursion  2 X n**
+
+将其抽象出一个个格子，n个括号对，即有2n个格子，每个格子可以放左括号或者右括号，遍历2^2n次，把全部情况都判断，然后判断合法情况
+
+**剪枝：**
+
+（1）局部不合法，不再递归
+
+（2）记住左括号和右括号的使用次数
+
+（3）递归终止条件，左括号使用次数和右括号使用次数都等于n
+
+时间复杂度：O(2^n)
+
+已经使用过的右括号一定会比使用过的左括号少，因为如果一上来就是右括号，这是不合法的
+
+~~~Java
+class Solution {
+   
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+         DFSJianZhi(n, 0, 0, "", result);
+
+         return result;
+    }
+
+    public void DFSJianZhi(int n, int usedLeft, int usedRight, String subResult, List<String> result){
+        //终止条件,左右括号都用完了
+        if(usedLeft == n && usedRight == n){
+            //终止时的子结果就是当前的字符串
+            result.add(subResult);
+            return ;
+        }
+
+        //局部优化，剪枝
+
+        //使用过的左括号要小于n
+        if(usedLeft < n){
+            DFSJianZhi(n, usedLeft + 1, usedRight, subResult + "(", result);
+
+        }
+
+        //右边使用过的括号要小于左边括号，因为左边要先使用，右边再用才合法
+        if(usedRight < n && usedRight < usedLeft){
+           DFSJianZhi(n, usedLeft, usedRight + 1, subResult + ")", result);
+        }
+    }
+}
+~~~
+
+## [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+
+
+
+## [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+
+**题目**
+
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/original_images/17_telephone_keypad.png)
+
+示例:
+
+输入："23"
+输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+**解题思路**
+
+和22的括号生成很相似，需要找到组合的全部可能性，使用DFS
+
+要点：开始的时候没有找准终止条件，这里的终止条件就是输入的数据的长度等于index时。
+
+~~~Java
+class Solution {
+
+    public List<String> letterCombinations(String digits) {
+
+        if(digits.isEmpty()){
+            return new ArrayList<>();
+        }
+        Map<Character,String> map= new HashMap<>();
+
+        List<String> result = new ArrayList<>();
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+
+        DFS(digits, 0, "", result);
+        
+        return result;
+    }
+        /**
+     * 
+     * @param digits 输入的数字字符串
+     * @param index 输入的数字字符串的下标索引
+     * @param subString 子字符串
+     * @param result 最终结果集
+     */
+    public void DFS(String digits, int index, String subString, List<String> result){
+        //如果输入的数字已经遍历完毕，就返回
+        if(index == digits.length()){
+            result.add(subString);
+            return;
+        }
+
+        //获取digits中的数字
+        Character digitsIndex = digits.charAt(index);
+        //获取数字对应的字母
+        String currentString =  map.get(digitsIndex);
+        //遍历当前数字对应字符串，分别进行递归，而子字符串的也要添加当前的字母
+        for(int i = 0; i < currentString.length(); i++){
+            DFS(digits, index + 1, subString + "" + currentString.charAt(i), result);
+        }
+    }
+}
+~~~
+
+
+
+# 剪枝
+
+## N皇后问题
+
+# 动态规划（Dynamic Program）
+
+**1.递归 + 记忆化 ------>递推**，重点就是**递推（从尾部往头部递推）**，递归+记忆化只是过渡
+
+**2.状态的定义：opt[n], dp[n], fib[n]**
+
+**3.状态的转移方程：opt[n] = best_of(opt[n - 1], opt[n - 2],...)**
+
+**4.最优子结构**
+
+### 斐波拉契：
+
+![1568546813658](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568546813658.png)
+
+### 找路径
+
+![1568546969927](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568546969927.png)
+
+![1568547148928](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568547148928.png)
+
+上述会有重复计算，时间复杂度为**O(2^n）**添加记忆化
+
+递推：从end 往 start 推，下面的一表示只能往下走或者只能往右走
+
+![1568547694270](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568547694270.png)
+
+递推出状态方程，时间复杂度为**O(M*N)**
+
+~~~Java 
+opt[i, j] = opt[i - 1, j] + opt[i, j - 1];
+//          表示往下走的步数     往右走的步数
+~~~
+
+~~~Java
+if(a[i, j] == "空地"){
+	opt[i, j] = opt[i - 1, j] + opt[i, j - 1];
+}else{
+    opt[i, j] = 0;
+}
+~~~
+
+
+
+![1568547966695](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568547966695.png)
+
+3表示这一格有3种走法走到终点， 可以往右走，也可以往下走。往下走的话就只有一种走法，往右走有2种走法
+
+
+
+
+
+![1568548526816](C:\Users\龙叔\AppData\Roaming\Typora\typora-user-images\1568548526816.png)
+
+
+
+## 70 爬楼梯
+
+#### 思路
+
+**思路一：回溯**
+
+递推公式：
+
+f(n) = f(n - 1) + f(n - 2)
+
+f(0) = f(1) = 1
+
+
+
+**思路二：动态规划**
+
+**DP状态的定义**
+
+**DP的状态方程**
+
+for: i = 2; i <= n:
+
+​	f[n] = f[n - 1] + f[n -2]
+
+
+
+#### 解法一：递归 分治 回溯
+
+~~~Java
+class Solution {
+    public int climbStairs(int n) {
+        if( n == 0){
+            return 0;
+        }
+        if( n == 1){
+            return 1;
+        }
+        if( n == 2){
+            return 2;
+        }
+        return climbStairs(n - 1) + climbStairs(n - 2);
+    }
+}
+~~~
+
+
+
+#### 解法二：**动态规划**
+
+**DP状态的定义**
+
+**DP的状态方程**
+
+~~~Java
+/**
+ * 时间复杂度O(N)
+ */
+class Solution {
+    public int climbStairs(int n) {
+        if(n <= 2){
+            return n; 
+        }
+       
+        int[] opt = new int[n];
+        // 只有一阶梯
+        opt[0] = 1;
+        //只有两个阶梯
+        opt[1] = 2;
+        for(int i = 2; i < n; i++){
+            opt[i] = opt[i - 1] + opt[i - 2];
+        }
+        return opt[n - 1];
+    }
+}
+~~~
+
+
+
+只用两个变量来存储前一步和前两步的操作，时间复杂度一样为O(N)
+
+~~~Java
+class Solution {
+    public int climbStairs(int n) {
+        if(n <= 2){
+            return n; 
+        }
+       
+        int oneStepBefore = 2;
+        int towStepBefore = 1;
+        int allCount = 0;
+        for(int i = 2; i < n; i++){
+            allCount = oneStepBefore + towStepBefore;
+            // 更新前一步和前两步的数值
+            // oneStepBefore变成了前两步
+            towStepBefore = oneStepBefore;
+            //前一步的操作更新为最新的allCount
+            oneStepBefore = allCount;
+        }
+        return allCount;
+    }
+}
+~~~
+
+
+
+## 120  三角形最小路径和
+
+#### 题目
+
+~~~html
+
+ 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
+ * 
+ * 例如，给定三角形：
+ * 
+ * [
+ * ⁠    [2],
+ * ⁠   [3,4],
+ * ⁠  [6,5,7],
+ * ⁠ [4,1,8,3]
+ * ]
+ * 
+ * 
+ * 自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
+~~~
+
+
+
+### 解题思路
+
+#### 思路一：DFS
+
+时间复杂度O(2^n)
+
+triargle（i, j){
+
+triargle(i + 1, j);//向左下相邻
+
+triargle(i + 1, j + 1);//向右下相邻
+
+}
+
+**思路二：动态方程**
+
+
+
+#### 解法一：DFS
+
+~~~Java
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+       if(triangle.isEmpty()){
+           return 0;
+       }
+       return DFS(triangle, 0, 0);
+
+
+
+    }
+    //终止条件，i大于等于层数，j 小于等于 每一行的列数
+    public int DFS(List<List<Integer>> triangle, int i, int j){
+        if( i >= triangle.size() || j >= triangle.get(i).size()){
+            return 0;
+        }
+
+        //分治
+        int left = DFS(triangle, i + 1, j);
+        int right = DFS(triangle, i + 1, j + 1);
+
+        //返回结果 左边和右边的最小值 + 当前值
+        return Math.min(left, right) + triangle.get(i).get(j);
+    }
+}
+~~~
+
+
+
+#### **解法二：**动态方程
+
+动态方程
+
+**自底向上的实现**，即最后一组数字应该作为初始值，反推
+
+定义状态：使用一个二维数组，记录当前每个节点的路径和 int/[]/[] dp
+
+定义状态方程：dp/[i]/[j] = Min(dp/[i + 1]/[j] ,  dp/[i + 1]/[j + 1] ) + trigle/[i]/[j]
+
+​					 Min(当前节点左下相邻节点 ,  当前节点右下相邻节点 ) + 当前本身节点
+
+时间复杂度O(N^2)
+
+~~~Java
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+
+
+        //获取最后一行作为初始值,注意size要减一
+        List<Integer> lastList = triangle.get(triangle.size() - 1);
+        //定义状态
+        int[][] dp = new int[triangle.size()][lastList.size()];
+        //定义状态初始值
+        for(int i = 0; i < lastList.size(); i++){
+
+            dp[triangle.size() - 1][i] = lastList.get(i);
+
+        }
+
+        //从底部开始遍历
+        for(int i = triangle.size() - 2; i >= 0; i--){
+            for(int j = triangle.get(i).size() - 1; j >= 0; j--){
+                //动态方程
+                // Min(当前节点左下相邻节点 ,  当前节点右下相邻节点 ) + 当前本身节点
+                dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][ j + 1]) + triangle.get(i).get(j);
+            }
+        }
+        return dp[0][0];
+    }
+}
 ~~~
 
